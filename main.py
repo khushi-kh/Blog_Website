@@ -11,14 +11,15 @@ import smtplib
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+import os
 
 # posts = requests.get("https://api.npoint.io/0a32949e49dc74fee5a8").json()
-my_email = "kharekhushi203@gmail.com"
-my_password = "wwof brgp dwtq oukw"
+my_email = os.environ.get('EMAIL')
+my_password = os.environ.get('PASSWORD')
 current_year = datetime.now().year
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
@@ -30,8 +31,8 @@ class Base(DeclarativeBase):
     pass
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///posts.db"
-db =SQLAlchemy(model_class=Base)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///posts.db")
+db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
 
